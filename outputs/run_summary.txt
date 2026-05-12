@@ -1,0 +1,23 @@
+SPRINT 4 MVP RUN SUMMARY
+
+Dataset: modeling_dataset.csv
+Train size: (119905, 10), Test size: (29977, 10)
+CV: StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+Tuning objective: ROC-AUC (threshold-independent).
+Threshold selection: maximize F1 on OOF TRAIN probabilities.
+
+Best model by tuned OOF F1: XGBoost
+Chosen threshold (tuned on TRAIN OOF): 0.67
+
+Outputs:
+- modeling_outputs_mvp\cv_oof_summary.csv
+- modeling_outputs_mvp\best_params.json
+- modeling_outputs_mvp\test_results.csv
+- modeling_outputs_mvp\confusion_matrix_test_threshold05.csv
+- modeling_outputs_mvp\confusion_matrix_test_tuned.csv
+- modeling_outputs_mvp\subgroup_metrics_best_model.csv
+- modeling_outputs_mvp\best_model_test_probs.csv
+- modeling_outputs_mvp\feature_importance_best_model.csv
+- modeling_outputs_mvp\feature_importance_grouped_best_model.csv
+- modeling_outputs_mvp\threshold_sweep_best_model.csv
