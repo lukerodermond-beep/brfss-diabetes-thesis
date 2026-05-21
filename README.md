@@ -1,12 +1,13 @@
+````markdown
 # Using Machine Learning and Self-Reported Health Data to Classify Diabetes Status
 
 This repository contains the code, outputs, and figures used for the Master's thesis:
 
 **Using Machine Learning and Self-Reported Health Data to Classify Diabetes Status: Evidence from BRFSS 2023**
 
-**Author:** Luke Rodermond
-**Programme:** MSc Data Science & Society
-**University:** Tilburg University
+**Author:** Luke Rodermond  
+**Programme:** MSc Data Science & Society  
+**University:** Tilburg University  
 
 ## Project overview
 
@@ -44,6 +45,7 @@ brfss-diabetes-thesis/
 │   ├── confusion_matrix_test_threshold05.csv
 │   ├── confusion_matrix_test_tuned.csv
 │   ├── cv_oof_summary.csv
+│   ├── fairness_gap_summary.csv
 │   ├── feature_importance_best_model.csv
 │   ├── feature_importance_grouped_best_model.csv
 │   ├── run_summary.txt
@@ -51,22 +53,29 @@ brfss-diabetes-thesis/
 │   ├── test_results.csv
 │   └── threshold_sweep_best_model.csv
 │
+├── modeling_outputs_nested_cv/
+│   ├── nested_cv_outer_fold_results.csv
+│   ├── nested_cv_pairwise_tests.csv
+│   └── nested_cv_summary.csv
+│
 ├── scripts/
 │   ├── create_modeling_dataset.py
 │   ├── eda_brfss_2023.py
+│   ├── make_fairness_gap_summary.py
 │   ├── make_thesis_models.py
-│   └── modeling_diabetes_mvp.py
+│   ├── modeling_diabetes_mvp.py
+│   └── nested_cv_model_comparison.py
 │
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-```
+````
 
 ## Data
 
 The original BRFSS 2023 dataset was obtained from the Centers for Disease Control and Prevention:
 
-https://www.cdc.gov/brfss/annual_data/annual_2023.html
+[https://www.cdc.gov/brfss/annual_data/annual_2023.html](https://www.cdc.gov/brfss/annual_data/annual_2023.html)
 
 The raw BRFSS data file is not included in this repository due to file size. To reproduce the full analysis, download the 2023 SAS XPORT file from the CDC and place it in the appropriate working directory.
 
@@ -112,7 +121,7 @@ Performs exploratory data analysis and initial data quality checks on the raw BR
 
 ### `create_modeling_dataset.py`
 
-Creates the final modeling dataset from the raw BRFSS 2023 data. This script recodes the target variable, recodes the selected predictors, handles missing values through row-wise deletion, and saves the final `modeling_dataset.csv`.
+Creates the final modeling dataset from the raw BRFSS 2023 data. This script recodes the target variable, recodes the selected predictors, handles missing values through row-wise deletion, and saves the final modeling dataset.
 
 ### `modeling_diabetes_mvp.py`
 
@@ -127,6 +136,14 @@ Runs the main modeling pipeline. This includes:
 * confusion matrices
 * feature importance
 * subgroup and combined subgroup metrics
+
+### `nested_cv_model_comparison.py`
+
+Runs the nested cross-validation robustness check used to assess whether the model ranking was stable across multiple data splits. The script uses outer folds for performance estimation and inner folds for hyperparameter tuning, with threshold selection based on out-of-fold predictions.
+
+### `make_fairness_gap_summary.py`
+
+Creates the fairness-relevant gap summary from the subgroup output. It calculates recall gaps, false negative rate gaps, and false positive rate gaps for individual and combined subgroup comparisons.
 
 ### `make_thesis_models.py`
 
@@ -167,6 +184,8 @@ Threshold selection was performed using out-of-fold predicted probabilities from
 
 The held-out test set was not used during hyperparameter tuning, threshold selection, or model selection.
 
+As an additional robustness check, nested cross-validation was used to evaluate whether the model ranking was stable across multiple data splits. Paired comparisons were then used to compare model F1-scores across outer folds.
+
 ## Main results
 
 XGBoost achieved the strongest overall performance on the held-out test set, but the difference compared with logistic regression and random forest was small.
@@ -187,9 +206,9 @@ Gain-based feature importance was calculated for the tuned XGBoost model and agg
 
 The most important predictors were:
 
-1. hypertension
-2. BMI category
-3. cholesterol status
+* hypertension
+* BMI category
+* cholesterol status
 
 These variables are plausible health-related predictors, but feature importance scores should not be interpreted as causal effects.
 
@@ -209,23 +228,37 @@ Combined subgroup analyses were also conducted for:
 
 The subgroup analysis showed that recall and error patterns differed across demographic groups. Combined subgroup analyses showed that performance differences became more pronounced when demographic characteristics were considered jointly.
 
+## Fairness-relevant gap analysis
+
+Fairness-relevant performance gaps were calculated from the subgroup output. The gap summary includes:
+
+* recall gaps
+* false negative rate gaps
+* false positive rate gaps
+
+The largest gaps appeared in the combined subgroup analyses, especially for age × education and sex × income. These results were used to evaluate whether model errors were evenly distributed across population groups.
+
 ## Figures
 
 The `figures/` folder contains the figures used in the thesis.
 
 The methodology workflow figure was created separately and is saved as:
 
-* `methodology_workflow.png`
+```text
+methodology_workflow.png
+```
 
 The remaining figures were generated by the analysis scripts and retain their original script-generated filenames:
 
-* `figure1_overall_model_performance.png`
-* `figure2_threshold_effect_xgboost.png`
-* `figure3_classification_outcomes_xgboost.png`
-* `figure4_feature_importance_xgboost.png`
-* `figure5_recall_individual_subgroups.png`
-* `figure6_recall_age_education.png`
-* `figure7_recall_sex_income.png`
+```text
+figure1_overall_model_performance.png
+figure2_threshold_effect_xgboost.png
+figure3_classification_outcomes_xgboost.png
+figure4_feature_importance_xgboost.png
+figure5_recall_individual_subgroups.png
+figure6_recall_age_education.png
+figure7_recall_sex_income.png
+```
 
 Note: In the thesis document, the methodology workflow is presented as Figure 1. Therefore, the script-generated figure filenames do not exactly match the final thesis figure numbering.
 
@@ -244,7 +277,18 @@ Important files include:
 * `feature_importance_best_model.csv`: encoded-level feature importance for XGBoost
 * `feature_importance_grouped_best_model.csv`: feature importance aggregated to original variables
 * `subgroup_metrics_best_model.csv`: subgroup and combined subgroup performance metrics
+* `fairness_gap_summary.csv`: recall, false negative rate, and false positive rate gaps across subgroup comparisons
 * `run_summary.txt`: summary of the modeling run
+
+## Nested cross-validation outputs
+
+The `modeling_outputs_nested_cv/` folder contains the outputs from the nested cross-validation robustness check.
+
+Important files include:
+
+* `nested_cv_outer_fold_results.csv`: outer-fold performance results from nested cross-validation
+* `nested_cv_pairwise_tests.csv`: paired t-test and Wilcoxon comparisons of model F1-scores across outer folds
+* `nested_cv_summary.csv`: summary of nested cross-validation mean and standard deviation performance
 
 ## Reproducibility
 
@@ -259,7 +303,8 @@ The modeling workflow follows this structure:
 5. Tune hyperparameters using stratified 5-fold cross-validation on the training set.
 6. Select model-specific thresholds using out-of-fold training predictions.
 7. Evaluate final performance on the held-out test set.
-8. Generate feature importance values, subgroup metrics, and thesis figures.
+8. Generate feature importance values, subgroup metrics, fairness-gap summaries, and thesis figures.
+9. Run nested cross-validation as an additional robustness check for model comparison.
 
 To install the required Python packages, run:
 
@@ -283,10 +328,13 @@ Main packages:
 
 The raw BRFSS data and generated modeling dataset are not included in this repository. The raw data can be downloaded from the CDC, and the modeling dataset can be recreated using the preprocessing script.
 
-The results in the `outputs/` folder correspond to the final modeling pipeline used in the thesis.
+The results in the `outputs/` folder correspond to the final modeling pipeline used in the thesis. The nested cross-validation outputs are stored separately in `modeling_outputs_nested_cv/`.
 
 ## Author
 
 Luke Rodermond
 MSc Data Science & Society
 Tilburg University
+
+```
+```
