@@ -1,4 +1,4 @@
-````markdown
+
 # Using Machine Learning and Self-Reported Health Data to Classify Diabetes Status
 
 This repository contains the code, outputs, and figures used for the Master's thesis:
