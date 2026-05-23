@@ -85,7 +85,6 @@ def make_model_performance_figure() -> None:
         figsize=(11, 6)
     )
 
-    ax.set_title("Overall model performance on the held-out test set")
     ax.set_ylabel("Score")
     ax.set_xlabel("")
     ax.set_ylim(0, 1)
@@ -113,7 +112,6 @@ def make_threshold_tuning_figure() -> None:
 
     plt.xlabel("Classification threshold")
     plt.ylabel("Score")
-    plt.title(f"Effect of classification threshold for {BEST_MODEL_NAME}")
     plt.ylim(0, 1)
     plt.legend()
 
@@ -156,7 +154,6 @@ def make_classification_outcomes_figure() -> None:
         figsize=(10, 6)
     )
 
-    ax.set_title(f"Classification outcomes for {BEST_MODEL_NAME} at two thresholds")
     ax.set_ylabel("Count")
     ax.set_xlabel("")
     plt.xticks(rotation=20, ha="right")
@@ -178,7 +175,6 @@ def make_feature_importance_figure() -> None:
         figsize=(10, 6)
     )
 
-    ax.set_title(f"Gain-based feature importance for {BEST_MODEL_NAME}")
     ax.set_ylabel("Aggregated importance")
     ax.set_xlabel("")
     plt.xticks(rotation=25, ha="right")
@@ -246,7 +242,6 @@ def make_individual_subgroup_recall_figure() -> None:
         figsize=(11, 6)
     )
 
-    ax.set_title("Recall across individual demographic subgroups")
     ax.set_ylabel("Recall")
     ax.set_xlabel("")
     ax.set_ylim(0, 1)
@@ -282,7 +277,6 @@ def make_recall_age_education_figure() -> None:
         figsize=(10, 6)
     )
 
-    ax.set_title("Recall across age and education groups")
     ax.set_ylabel("Recall")
     ax.set_xlabel("")
     ax.set_ylim(0, 1)
@@ -326,7 +320,6 @@ def make_recall_sex_income_figure() -> None:
         figsize=(10, 6)
     )
 
-    ax.set_title("Recall across sex and income groups")
     ax.set_ylabel("Recall")
     ax.set_xlabel("")
     ax.set_ylim(0, 1)
