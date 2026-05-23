@@ -1,0 +1,7 @@
+Comparison,Recall Gap,FNR Gap,FPR Gap,Main Issue
+Sex,0.148,0.148,0.097,Lower recall for females
+Income,0.166,0.166,0.131,Lower recall for high-income respondents
+Age,0.288,0.288,0.196,Younger respondents more often missed
+Education,0.134,0.134,0.097,Lower recall for high-education respondents
+Age × education,0.41,0.41,0.314,Young high-education respondents most often missed
+Sex × income,0.354,0.354,0.238,Female high-income respondents most often missed
