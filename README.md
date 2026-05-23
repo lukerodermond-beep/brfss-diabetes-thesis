@@ -28,17 +28,7 @@ brfss-diabetes-thesis/
 ├── data/
 │   └── README_data.md
 │
-├── thesis_figures/
-│   ├── methodology_workflow.png
-│   ├── figure1_overall_model_performance.png
-│   ├── figure2_threshold_effect_xgboost.png
-│   ├── figure3_classification_outcomes_xgboost.png
-│   ├── figure4_feature_importance_xgboost.png
-│   ├── figure5_recall_individual_subgroups.png
-│   ├── figure6_recall_age_education.png
-│   └── figure7_recall_sex_income.png
-│
-├── outputs/
+├── modeling_outputs_mvp/
 │   ├── best_model_test_probs.csv
 │   ├── best_params.json
 │   ├── confusion_matrix_test_threshold05.csv
@@ -50,7 +40,17 @@ brfss-diabetes-thesis/
 │   ├── run_summary.txt
 │   ├── subgroup_metrics_best_model.csv
 │   ├── test_results.csv
-│   └── threshold_sweep_best_model.csv
+│   ├── threshold_sweep_best_model.csv
+│   │
+│   └── thesis_figures/
+│       ├── methodology_workflow.png
+│       ├── figure1_overall_model_performance.png
+│       ├── figure2_threshold_effect_xgboost.png
+│       ├── figure3_classification_outcomes_xgboost.png
+│       ├── figure4_feature_importance_xgboost.png
+│       ├── figure5_recall_individual_subgroups.png
+│       ├── figure6_recall_age_education.png
+│       └── figure7_recall_sex_income.png
 │
 ├── modeling_outputs_nested_cv/
 │   ├── nested_cv_outer_fold_results.csv
@@ -136,9 +136,13 @@ Runs the main modeling pipeline. This includes:
 * feature importance
 * subgroup and combined subgroup metrics
 
+The main modeling outputs are saved in `modeling_outputs_mvp/`.
+
 ### `nested_cv_model_comparison.py`
 
 Runs the nested cross-validation robustness check used to assess whether the model ranking was stable across multiple data splits. The script uses outer folds for performance estimation and inner folds for hyperparameter tuning, with threshold selection based on out-of-fold predictions.
+
+The nested cross-validation outputs are saved separately in `modeling_outputs_nested_cv/`.
 
 ### `make_fairness_gap_summary.py`
 
@@ -147,6 +151,8 @@ Creates the fairness-relevant gap summary from the subgroup output. It calculate
 ### `make_thesis_models.py`
 
 Generates the final figures used in the thesis from the saved output files. The exported thesis figures do not contain internal plot titles, because figure titles are provided in the thesis document itself.
+
+The figures are saved in `modeling_outputs_mvp/thesis_figures/`.
 
 ## Modeling approach
 
@@ -193,7 +199,7 @@ Final tuned test-set performance:
 
 | Model               | Threshold | ROC-AUC | PR-AUC | Precision | Recall | F1-score |
 | ------------------- | --------: | ------: | -----: | --------: | -----: | -------: |
-| Logistic Regression |      0.67 |   0.786 |  0.293 |     0.282 |  0.497 |    0.365 |
+| Logistic Regression |      0.67 |   0.786 |  0.293 |     0.288 |  0.497 |    0.365 |
 | Random Forest       |      0.62 |   0.789 |  0.296 |     0.273 |  0.546 |    0.364 |
 | XGBoost             |      0.67 |   0.793 |  0.302 |     0.291 |  0.516 |    0.372 |
 
@@ -239,7 +245,11 @@ The largest gaps appeared in the combined subgroup analyses, especially for age 
 
 ## Figures
 
-The `thesis_figures/` folder contains the final figures used in the thesis.
+The final thesis figures are stored in:
+
+```text
+modeling_outputs_mvp/thesis_figures/
+```
 
 The methodology workflow figure was created separately and is saved as:
 
@@ -261,9 +271,9 @@ figure7_recall_sex_income.png
 
 Note: In the thesis document, the methodology workflow is presented as Figure 1. Therefore, the script-generated figure filenames do not exactly match the final thesis figure numbering.
 
-## Outputs
+## Main modeling outputs
 
-The `outputs/` folder contains the main generated output files from the modeling pipeline.
+The `modeling_outputs_mvp/` folder contains the main generated output files from the modeling pipeline.
 
 Important files include:
 
@@ -322,12 +332,13 @@ Main packages:
 * scikit-learn
 * XGBoost
 * matplotlib
+* SciPy
 
 ## Notes
 
 The raw BRFSS data and generated modeling dataset are not included in this repository. The raw data can be downloaded from the CDC, and the modeling dataset can be recreated using the preprocessing script.
 
-The results in the `outputs/` folder correspond to the final modeling pipeline used in the thesis. The nested cross-validation outputs are stored separately in `modeling_outputs_nested_cv/`.
+The results in the `modeling_outputs_mvp/` folder correspond to the final modeling pipeline used in the thesis. The nested cross-validation outputs are stored separately in `modeling_outputs_nested_cv/`.
 
 ## Author
 
